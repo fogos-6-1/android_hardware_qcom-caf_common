@@ -3,34 +3,59 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
+// Select the exported UAPI archive when the kernel is built outside Android.
+soong_config_module_type {
+    name: "qti_kernel_header_defaults_type",
+    module_type: "cc_defaults",
+    config_namespace: "qcom_kernel",
+    bool_variables: ["use_prebuilt_headers"],
+    properties: ["generated_headers", "export_generated_headers"],
+}
+
+qti_kernel_header_defaults_type {
+    name: "qti_kernel_header_defaults",
+    soong_config_variables: {
+        use_prebuilt_headers: {
+            generated_headers: ["prebuilt_kernel_includes"],
+            export_generated_headers: ["prebuilt_kernel_includes"],
+            conditions_default: {
+                generated_headers: ["generated_kernel_includes"],
+                export_generated_headers: ["generated_kernel_includes"],
+            },
+        },
+    },
+    vendor_available: true,
+    recovery_available: true,
+}
+
 cc_library_headers {
     name: "audio_kernel_headers",
-    defaults: ["generated_kernel_header_defaults"],
+    defaults: ["qti_kernel_header_defaults"],
 }
 
 cc_library_headers {
     name: "qti_audio_kernel_uapi",
-    defaults: ["generated_kernel_header_defaults"],
+    defaults: ["qti_kernel_header_defaults"],
 }
 
 cc_library_headers {
     name: "qti_display_kernel_headers",
-    defaults: ["generated_kernel_header_defaults"],
+    defaults: ["qti_kernel_header_defaults"],
 }
 
 cc_library_headers {
     name: "qti_ipa_kernel_headers",
-    defaults: ["generated_kernel_header_defaults"],
+    defaults: ["qti_kernel_header_defaults"],
 }
 
 cc_library_headers {
     name: "qti_kernel_headers",
-    defaults: ["generated_kernel_header_defaults"],
+    defaults: ["qti_kernel_header_defaults"],
 }
 
 cc_library_headers {
     name: "smmu_proxy_uapi_header",
-    defaults: ["generated_kernel_header_defaults"],
+    defaults: ["qti_kernel_header_defaults"],
 }
 
 soong_config_module_type {
